@@ -18,6 +18,13 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (FilterOptions selectedValue) {
+              setState(() {
+                if (selectedValue == FilterOptions.Favourites) {
+                  _showOnlyFavourites = true;
+                } else {
+                  _showOnlyFavourites = false;
+                }
+              });
             },
             itemBuilder: (ctx) => [
               PopupMenuItem(
@@ -32,7 +39,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           )
         ],
       ),
-      body: ProductsGrid(),
+      body: ProductsGrid(_showOnlyFavourites),
     );
   }
 }
