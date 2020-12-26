@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 
 class CartItem extends StatelessWidget {
@@ -19,7 +17,10 @@ class CartItem extends StatelessWidget {
         padding: EdgeInsets.all(8),
         child: ListTile(
           leading: CircleAvatar(
-            child: Text('₹/$price'),
+            child: Padding(
+              child: FittedBox(child: Text('₹$price')),
+              padding: EdgeInsets.all(3),
+            ),
           ),
           title: Text(title),
           subtitle: Text('₹${(price * quantity)}'),
