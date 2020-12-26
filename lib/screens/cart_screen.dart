@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:provider/provider.dart';
-import '../providers/cart.dart';
+import '../providers/cart.dart' show Cart;
+import '../widgets/cart_item.dart';
+//show keyword is used to avoid the name clash of CartItem constructor
 import 'package:flutter/material.dart';
 
 class CartScreen extends StatelessWidget {
@@ -50,7 +52,16 @@ class CartScreen extends StatelessWidget {
                 ],
               ),
             ),
-          )
+          ),
+          Expanded(
+              child: ListView.builder(
+            itemBuilder: (ctx, i) => CartItem(
+                id: cart.items.values.toList()[i].id,
+                price: cart.items.values.toList()[i].price,
+                title: cart.items.values.toList()[i].title,
+                quantity: cart.items.values.toList()[i].quantity),
+            itemCount: cart.cartCount,
+          ))
         ],
       ),
     );
