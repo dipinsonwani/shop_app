@@ -4,6 +4,7 @@ import '../providers/cart.dart' show Cart;
 import '../widgets/cart_item.dart';
 //show keyword is used to avoid the name clash of CartItem constructor
 import 'package:flutter/material.dart';
+import '../providers/orders.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = '/cart';
@@ -47,7 +48,11 @@ class CartScreen extends StatelessWidget {
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Provider.of<Orders>(context, listen: false).addOrder(
+                          cart.items.values.toList(), cart.totalAmount);
+                          cart.clearCart();
+                    },
                   )
                 ],
               ),
