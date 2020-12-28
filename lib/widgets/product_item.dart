@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
@@ -8,7 +9,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
-    final cart = Provider.of<Cart>(context,listen: false);
+    final cart = Provider.of<Cart>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GestureDetector(
@@ -44,6 +45,14 @@ class ProductItem extends StatelessWidget {
               icon: Icon(Icons.shopping_cart),
               onPressed: () {
                 cart.addItem(product.id, product.title, product.price);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text('Added Item to cart!'),
+                  duration: Duration(seconds: 2),
+                  action: SnackBarAction(
+                    label: 'UNDO',
+                    onPressed: () {},
+                  ),
+                ));
               },
               color: Theme.of(context).accentColor,
             ),
