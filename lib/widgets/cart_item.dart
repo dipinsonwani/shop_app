@@ -32,7 +32,7 @@ class CartItem extends StatelessWidget {
         Provider.of<Cart>(context,listen: false).removeItem(productId);
       },
       confirmDismiss: (direction) {
-        showDialog(
+        return showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
                   title: Text('Are you sure?'),

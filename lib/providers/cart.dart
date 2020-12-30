@@ -52,13 +52,12 @@ class Cart with ChangeNotifier {
     }
     notifyListeners();
   }
-  void removeItem(String productId){
+
+  void removeItem(String productId) {
     _items.remove(productId);
     notifyListeners();
   }
 
-  void clearCart(){
-    _items ={};
   void removeSingleItem(String productId) {
     if (!_items.containsKey(productId)) {
       return;
@@ -77,6 +76,9 @@ class Cart with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void clearCart() {
+    _items = {};
     notifyListeners();
   }
 }
