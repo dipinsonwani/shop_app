@@ -4,7 +4,7 @@ import '../providers/products.dart';
 import '../widgets/user_product_item.dart';
 
 class UserProductsScreen extends StatelessWidget {
-  
+  static const routeName ='/user-product';
   @override
   Widget build(BuildContext context) {
     final productsData = Provider.of<Products>(context);
