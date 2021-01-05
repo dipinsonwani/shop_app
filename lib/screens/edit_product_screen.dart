@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -9,11 +8,29 @@ class EditProductScreen extends StatefulWidget {
 
 class _EditProductScreenState extends State<EditProductScreen> {
   final _imgUrlController = TextEditingController();
+  final _imgUrlFocusNode = FocusNode();
+
   @override
-  void dispose(){
+  void initState() {
+    //add listener to preview image when it loses it focus
+    _imgUrlFocusNode.addListener(_updateImgUrl);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _imgUrlFocusNode.removeListener(_updateImgUrl);
     _imgUrlController.dispose();
+    _imgUrlFocusNode.dispose();
     super.dispose();
   }
+
+  void _updateImgUrl() {
+    if (!_imgUrlFocusNode.hasFocus) {
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,6 +88,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       keyboardType: TextInputType.url,
                       textInputAction: TextInputAction.done,
                       controller: _imgUrlController,
+                      focusNode: _imgUrlFocusNode,
                       onEditingComplete: () {
                         setState(() {});
                       },
