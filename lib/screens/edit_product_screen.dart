@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -7,6 +8,12 @@ class EditProductScreen extends StatefulWidget {
 }
 
 class _EditProductScreenState extends State<EditProductScreen> {
+  final _imgUrlController = TextEditingController();
+  @override
+  void dispose(){
+    _imgUrlController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +44,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 keyboardType: TextInputType.multiline,
               ),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Container(
                     width: 100,
@@ -47,7 +55,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       width: 1,
                       color: Colors.grey,
                     )),
-                    child: Container(),
+                    child: _imgUrlController.text.isEmpty
+                        ? Text('Enter a URL')
+                        : FittedBox(
+                            child: Image.network(_imgUrlController.text),
+                            fit: BoxFit.fill,
+                          ),
                   ),
                   //used Expanded because TextFormField has an unconstraint width and gives render error
                   Expanded(
@@ -57,6 +70,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       ),
                       keyboardType: TextInputType.url,
                       textInputAction: TextInputAction.done,
+                      controller: _imgUrlController,
+                      onEditingComplete: () {
+                        setState(() {});
+                      },
                     ),
                   )
                 ],
