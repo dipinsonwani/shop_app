@@ -15,12 +15,42 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _form = GlobalKey<FormState>();
   var _editedProduct =
       Product(description: '', id: null, imageUrl: '', price: null, title: '');
+  var _isInit = true;
+  var _initValues = {
+    'title': '',
+    'price': '',
+    'description': '',
+    'imageUrl': ''
+  };
+
+  @override
+  void didChangeDependencies() {
+    print('didchangeDependencies');
+
+    final productId = ModalRoute.of(context).settings.arguments as String;
+    if (productId != null) {
+      _editedProduct = Provider.of<Products>(context, listen: false)
+          .items
+          .firstWhere((product) => product.id == productId);
+      _initValues = {
+        'title': _editedProduct.title,
+        'price': _editedProduct.price.toString(),
+        'description': _editedProduct.description,
+        'imageUrl': ''
+      };
+      _imgUrlController.text = _editedProduct.imageUrl;
+    }
+
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   void initState() {
     //add listener to preview image when it loses it focus
     _imgUrlFocusNode.addListener(_updateImgUrl);
     super.initState();
+    print('initState');
   }
 
   @override
@@ -29,6 +59,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _imgUrlController.dispose();
     _imgUrlFocusNode.dispose();
     super.dispose();
+    print('dispose');
   }
 
   void _updateImgUrl() {
@@ -39,7 +70,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void saveform() {
     //validator property wont work until validate() is triggered or autoValidateMode is set to true
-     final isValid = _form.currentState.validate();
+    final isValid = _form.currentState.validate();
     if (!isValid) {
       return;
     }
@@ -68,6 +99,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           child: ListView(
             children: <Widget>[
               TextFormField(
+                initialValue: _initValues['title'],
                 decoration: InputDecoration(
                   labelText: 'Title',
                 ),
@@ -89,6 +121,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _initValues['price'],
                 decoration: InputDecoration(
                   labelText: 'Price',
                 ),
@@ -117,6 +150,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _initValues['description'],
                 decoration: InputDecoration(
                   labelText: 'Description',
                 ),
@@ -184,7 +218,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             !value.startsWith('https')) {
                           return 'Please Provide a valid URL';
                         }
-                        if(!value.endsWith('.png') && !value.endsWith('.jpg') && !value.endsWith('.jpeg')){
+                        if (!value.endsWith('.png') &&
+                            !value.endsWith('.jpg') &&
+                            !value.endsWith('.jpeg')) {
                           return 'Please Provide a valid Image URL';
                         }
                         return null;
