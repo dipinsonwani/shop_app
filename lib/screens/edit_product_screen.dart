@@ -36,6 +36,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void saveform() {
+    //validator property wont work until validate() is triggered or autoValidateMode is set to true
+     final isValid = _form.currentState.validate();
+    if (!isValid) {
+      return;
+    }
     _form.currentState.save();
     print(_editedProduct.title);
     print(_editedProduct.price);
@@ -58,6 +63,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
+          //autovalidateMode: AutovalidateMode.always,
           key: _form,
           child: ListView(
             children: <Widget>[
@@ -66,6 +72,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   labelText: 'Title',
                 ),
                 textInputAction: TextInputAction.next,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please Provide a value';
+                  }
+                  return null;
+                },
                 onSaved: (value) {
                   _editedProduct = Product(
                     description: _editedProduct.description,
@@ -82,6 +94,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 ),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please Provide a value.';
+                  }
+                  if (double.tryParse(value) == null) {
+                    return 'Please Enter a valid number.';
+                  }
+                  if (double.parse(value) <= 0) {
+                    return 'Please Provide a number greater than zero.';
+                  }
+                  return null;
+                },
                 onSaved: (value) {
                   _editedProduct = Product(
                     description: _editedProduct.description,
@@ -98,6 +122,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 ),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please Provide a Description';
+                  }
+                  if (value.length < 10) {
+                    return 'Should be atlease 10 character long.';
+                  }
+                  return null;
+                },
                 onSaved: (value) {
                   _editedProduct = Product(
                     description: value,
@@ -142,6 +175,19 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       },
                       onFieldSubmitted: (_) {
                         saveform();
+                      },
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter an image URL';
+                        }
+                        if (!value.startsWith('http') &&
+                            !value.startsWith('https')) {
+                          return 'Please Provide a valid URL';
+                        }
+                        if(!value.endsWith('.png') && !value.endsWith('.jpg') && !value.endsWith('.jpeg')){
+                          return 'Please Provide a valid Image URL';
+                        }
+                        return null;
                       },
                       onSaved: (value) {
                         _editedProduct = Product(
