@@ -75,7 +75,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _form.currentState.save();
+    //adding the product only when clicked on add and update if clicked on edit
+    if(_editedProduct.id!=null){
+    Provider.of<Products>(context,listen:false).updateProduct(_editedProduct.id, _editedProduct);
+    }else{
     Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    }
     Navigator.of(context).pop();
   }
 
