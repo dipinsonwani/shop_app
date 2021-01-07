@@ -53,7 +53,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product product) {
     const url =
-        'https://shopapp-12cb0-default-rtdb.firebaseio.com/products.json';
+        'https://shopapp-12cb0-default-rtdb.firebaseio.com/products';
     return http
         .post(url,
             body: json.encode({
@@ -62,7 +62,7 @@ class Products with ChangeNotifier {
               'imageUrl': product.imageUrl,
               'price': product.price,
               'isFavourite': product.isFavourite,
-            }))
+            }))//.catchError is not used here because if its used here .then will execute after handling the error
         .then((response) {
       final newProduct = Product(
           description: product.description,
@@ -72,6 +72,9 @@ class Products with ChangeNotifier {
           title: product.title);
       _items.add(newProduct);
       notifyListeners();
+    }).catchError((error){
+      print(error);
+      throw error;//used this to throw another error so that another catchError can be used in EditProductScreen
     });
   }
 
