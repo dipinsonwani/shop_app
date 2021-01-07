@@ -53,7 +53,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product product) {
     const url =
-        'https://shopapp-12cb0-default-rtdb.firebaseio.com/products';
+        'https://shopapp-12cb0-default-rtdb.firebaseio.com/products.json';
     return http
         .post(url,
             body: json.encode({
