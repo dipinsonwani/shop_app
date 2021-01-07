@@ -16,6 +16,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   var _editedProduct =
       Product(description: '', id: null, imageUrl: '', price: null, title: '');
   var _isInit = true;
+  var _isLoading = false;
   var _initValues = {
     'title': '',
     'price': '',
@@ -73,13 +74,24 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _form.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
     //adding the product only when clicked on add and update if clicked on edit
     if (_editedProduct.id != null) {
       Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
-          Navigator.of(context).pop();
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
     } else {
-      Provider.of<Products>(context, listen: false).addProduct(_editedProduct).then((_) {
+      Provider.of<Products>(context, listen: false)
+          .addProduct(_editedProduct)
+          .then((_) {
+        setState(() {
+          _isLoading = false;
+        });
         Navigator.of(context).pop();
       });
     }
@@ -98,7 +110,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
           )
         ],
       ),
-      body: Padding(
+      body: _isLoading 
+      ? Center(child: CircularProgressIndicator(),)
+      :Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           //autovalidateMode: AutovalidateMode.always,
