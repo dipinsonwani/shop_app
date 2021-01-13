@@ -65,7 +65,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
-  void saveform() {
+  Future<void> saveform() async {
     //validator property wont work until validate() is triggered or autoValidateMode is set to true
     final isValid = _form.currentState.validate();
     if (!isValid) {
@@ -77,7 +77,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     });
     //adding the product only when clicked on add and update if clicked on edit
     if (_editedProduct.id != null) {
-      Provider.of<Products>(context, listen: false)
+      await Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
       setState(() {
         _isLoading = false;
