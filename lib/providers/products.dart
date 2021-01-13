@@ -89,4 +89,13 @@ class Products with ChangeNotifier {
     _items.removeWhere((prod) => prod.id==id);
     notifyListeners();
   }
+
+  Future<void> fetchAndSetProduct() async {
+    const url =
+        'https://shopapp-12cb0-default-rtdb.firebaseio.com/products.json';
+    try {
+      final response = await http.get(url);
+      print(json.decode(response.body));
+    } catch (error) {}
+  }
 }
