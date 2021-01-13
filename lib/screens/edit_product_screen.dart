@@ -79,33 +79,35 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (_editedProduct.id != null) {
       await Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
-      setState(() {
-        _isLoading = false;
-      });
+
       Navigator.of(context).pop();
     } else {
-      Provider.of<Products>(context, listen: false)
-          .addProduct(_editedProduct)
-          .catchError((error) {
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addProduct(_editedProduct);
+      } catch (error) {
         //'return' will return the future to catchError only when 'Okay' is clicked and .then will be executed after that
-        return showDialog<Null>(
+        await showDialog<Null>(
             context: context,
             builder: (ctx) => AlertDialog(
                   title: Text('An Error occured!'),
                   content: Text('Something went wrong'),
                   actions: <Widget>[
-                    FlatButton(child:Text('Okay'),onPressed: (){
-                      Navigator.of(ctx).pop();
-                    },)
+                    FlatButton(
+                      child: Text('Okay'),
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                      },
+                    )
                   ],
                 ));
-      }).then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
-      });
+      }
+      Navigator.of(context).pop();
     }
+    setState(() {
+      _isLoading = false;
+    });
+
     // Navigator.of(context).pop();
   }
 
