@@ -51,19 +51,19 @@ class Products with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  Future<void> addProduct(Product product) {
+  Future<void> addProduct(Product product) async {
     const url =
         'https://shopapp-12cb0-default-rtdb.firebaseio.com/products.json';
-    return http
-        .post(url,
-            body: json.encode({
-              'title': product.title,
-              'description': product.description,
-              'imageUrl': product.imageUrl,
-              'price': product.price,
-              'isFavourite': product.isFavourite,
-            }))//.catchError is not used here because if its used here .then will execute after handling the error
-        .then((response) {
+    try {
+      final response = await http.post(url,
+          body: json.encode({
+            'title': product.title,
+            'description': product.description,
+            'imageUrl': product.imageUrl,
+            'price': product.price,
+            'isFavourite': product.isFavourite,
+          })); //.catchError is not used here because if its used here .then will execute after handling the error
+
       final newProduct = Product(
           description: product.description,
           id: json.decode(response.body)['name'],
@@ -72,10 +72,11 @@ class Products with ChangeNotifier {
           title: product.title);
       _items.add(newProduct);
       notifyListeners();
-    }).catchError((error){
+    } catch (error) {
       print(error);
-      throw error;//used this to throw another error so that another catchError can be used in EditProductScreen
-    });
+      throw error;
+      //used this to throw another error so that another catchError can be used in EditProductScreen
+    }
   }
 
   void updateProduct(String id, Product newProduct){
