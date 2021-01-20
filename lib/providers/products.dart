@@ -40,9 +40,14 @@ class Products with ChangeNotifier {
   //   ),
    ];
 
+  String authToken;
+  
+  List<Product> _items = [];
+  Products(this.authToken,this._items);
   List<Product> get items {
     return [..._items];
   }
+  //used getter to make it accessible outside this class and cannot change outside this class cause we want to use notifylisteners()
 
   List<Product> get showFavouritesOnly{
     return items.where((proditem) => proditem.isFavourite).toList();
@@ -113,8 +118,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProduct() async {
-    const url =
-        'https://shopapp-12cb0-default-rtdb.firebaseio.com/products.json';
+    final url =
+        'https://shopapp-12cb0-default-rtdb.firebaseio.com/products.json?auth=$authToken';
     List<Product> loadedProducts = [];
     try {
       final response = await http.get(url);
