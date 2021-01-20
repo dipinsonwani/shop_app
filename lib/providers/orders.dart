@@ -19,7 +19,9 @@ class OrderItem {
 
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
+  final String authToken;
 
+  Orders(this.authToken,this._orders);
   List<OrderItem> get orders {
     return [..._orders];
   }
@@ -51,7 +53,7 @@ class Orders with ChangeNotifier {
 
   Future<void> fetchOrders() async {
     final List<OrderItem> loadedOrders = [];
-    const url = 'https://shopapp-12cb0-default-rtdb.firebaseio.com/orders.json';
+    final url = 'https://shopapp-12cb0-default-rtdb.firebaseio.com/orders.json?auth=$authToken';
     final response = await http.get(url);
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
     print(response.body);
