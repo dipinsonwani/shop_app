@@ -6,9 +6,9 @@ import '../models/http_exception.dart';
 
 class Products with ChangeNotifier {
   String authToken;
-  
+  String userId;
   List<Product> _items = [];
-  Products(this.authToken,this._items);
+  Products(this.authToken, this._items, this.userId);
   List<Product> get items {
     return [..._items];
   }
@@ -25,6 +25,7 @@ class Products with ChangeNotifier {
   Future<void> addProduct(Product product) async {
     final url =
         'https://shopapp-12cb0-default-rtdb.firebaseio.com/products.json?auth=$authToken';
+
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -32,7 +33,6 @@ class Products with ChangeNotifier {
             'description': product.description,
             'imageUrl': product.imageUrl,
             'price': product.price,
-            'isFavourite': product.isFavourite,
           })); //.catchError is not used here because if its used here .then will execute after handling the error
 
       final newProduct = Product(
@@ -83,21 +83,26 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProduct() async {
-    final url =
+    var url =
         'https://shopapp-12cb0-default-rtdb.firebaseio.com/products.json?auth=$authToken';
     List<Product> loadedProducts = [];
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      if(extractedData == null){
+      if (extractedData == null) {
         return;
       }
+      url =
+          'https://shopapp-12cb0-default-rtdb.firebaseio.com/userFavourites/$userId.json?auth=$authToken';
+      final favouriteResponse = await http.get(url);
+      final favouriteData = json.decode(favouriteResponse.body);
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
           id: prodId,
           description: prodData['description'],
           imageUrl: prodData['imageUrl'],
-          isFavourite: prodData['isFavourite'],
+          isFavourite:
+              favouriteData == null ? false : favouriteData[prodId] ?? false,
           title: prodData['title'],
           price: prodData['price'],
         ));
