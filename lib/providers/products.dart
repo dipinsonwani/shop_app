@@ -33,6 +33,7 @@ class Products with ChangeNotifier {
             'description': product.description,
             'imageUrl': product.imageUrl,
             'price': product.price,
+            'creatorId' : userId
           })); //.catchError is not used here because if its used here .then will execute after handling the error
 
       final newProduct = Product(
@@ -82,9 +83,10 @@ class Products with ChangeNotifier {
     });
   }
 
-  Future<void> fetchAndSetProduct() async {
+  Future<void> fetchAndSetProduct([bool filterByUser=false]) async {
+    final filterString = filterByUser? 'orderBy="creatorId"&equalTo="$userId"' : '';
     var url =
-        'https://shopapp-12cb0-default-rtdb.firebaseio.com/products.json?auth=$authToken';
+        'https://shopapp-12cb0-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString';
     List<Product> loadedProducts = [];
     try {
       final response = await http.get(url);
