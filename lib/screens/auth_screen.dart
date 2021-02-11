@@ -142,9 +142,12 @@ class _AuthCardState extends State<AuthCard>
               title: Text('An Error occured'),
               content: Text(message),
               actions: <Widget>[
-                FlatButton(child:Text('Okay'),onPressed: (){
-                  Navigator.of(context).pop();
-                },)
+                FlatButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
               ],
             ));
   }
