@@ -3,6 +3,7 @@ import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/orders.dart';
 import 'package:shop_app/screens/cart_screen.dart';
+import './my-theme1613897215299.dart';
 import './screens/edit_product_screen.dart';
 import './providers/products.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
@@ -51,12 +52,13 @@ class MyApp extends StatelessWidget {
         builder: (ctx, auth, _) => MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
-          theme: ThemeData(
-              primarySwatch: Colors.purple,
-              accentColor: Colors.deepOrange,
-              pageTransitionsTheme: PageTransitionsTheme(builders: {
-                TargetPlatform.android: CustomPageTransitionBuilder(),
-              })),
+          theme: myTheme,
+          // theme: ThemeData(
+          //     primarySwatch: Colors.purple,
+          //     accentColor: Colors.deepOrange,
+          //     pageTransitionsTheme: PageTransitionsTheme(builders: {
+          //       TargetPlatform.android: CustomPageTransitionBuilder(),
+          //     })),
           home: auth.isAuth
               ? ProductsOverviewScreen()
               : FutureBuilder(
@@ -84,7 +86,8 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Shop App"),
+        title: Text("FastCart"),
+        leading: Icon(Icons.shopping_cart_sharp),
       ),
       body: Center(child: Text("Items!")),
     );
